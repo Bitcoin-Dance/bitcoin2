@@ -23,11 +23,22 @@ pub async fn send_raw_transaction(pool: PgPool, raw_transaction: Vec<u8>) -> Res
             .map_err(Error::from)?;
 
     let evm: Evm = Evm::new(pool);
-    let _ = evm.run_transaction(&transaction).await;
+    evm.run_transaction(&transaction).await?;
 
     Ok(ResponseValue::Value(encode_bytes(
         &transaction.hash().to_vec(),
     )))
+}
+
+pub fn encode_u256(amount: U256) -> Value {
+    if amount == U256::ZERO {
+        json!("0x0")
+    } else {
+        json!(format!(
+            "0x{}",
+            hex::encode(amount.to_be_bytes_vec()).trim_start_matches('0')
+        ))
+    }
 }
 
 pub fn encode_amount(amount: BigUint) -> Value {

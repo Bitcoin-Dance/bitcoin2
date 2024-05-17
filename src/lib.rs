@@ -41,7 +41,7 @@ mod tests {
 
     #[sqlx::test]
     async fn upgrade_by_message(pool: PgPool) -> sqlx::Result<()> {
-        let evm: Evm = Evm::new(pool.clone());
+        let _evm: Evm = Evm::new(pool.clone());
         let message = json!({
                 "jsonrpc": "2.0",
                 "method": "eth_sendRawTransaction",
